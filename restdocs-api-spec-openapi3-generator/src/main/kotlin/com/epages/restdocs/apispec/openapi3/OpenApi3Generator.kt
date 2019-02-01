@@ -356,6 +356,7 @@ object OpenApi3Generator {
             name = parameterDescriptor.name
             description = parameterDescriptor.description
             schema = StringSchema()
+            example = ExampleExtractor.extract(parameterDescriptor.description)
         }
     }
 
@@ -373,6 +374,7 @@ object OpenApi3Generator {
             description = parameterDescriptor.description
             required = parameterDescriptor.optional.not()
             schema = simpleTypeToSchema(parameterDescriptor.type)
+            example = ExampleExtractor.extract(parameterDescriptor.description)
         }
     }
 
@@ -382,6 +384,7 @@ object OpenApi3Generator {
             description = headerDescriptor.description
             required = headerDescriptor.optional.not()
             schema = simpleTypeToSchema(headerDescriptor.type)
+            example = ExampleExtractor.extract(headerDescriptor.description)
         }
     }
 
