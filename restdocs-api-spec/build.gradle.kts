@@ -1,5 +1,11 @@
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
+group = "com.github.haloper"
+
+apply {
+    plugin("maven")
+}
+
 plugins {
     kotlin("jvm")
 }
