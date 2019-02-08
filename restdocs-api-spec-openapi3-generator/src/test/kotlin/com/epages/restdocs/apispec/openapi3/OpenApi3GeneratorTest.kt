@@ -544,7 +544,7 @@ class OpenApi3GeneratorTest {
                 headers = listOf(
                     HeaderDescriptor(
                         name = "Authorization",
-                        description = "Access token",
+                        description = "Access token ^| 1234-1345-1334",
                         type = "string",
                         optional = false
                     )

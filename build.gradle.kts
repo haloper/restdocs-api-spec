@@ -113,7 +113,7 @@ subprojects {
             setPublications("mavenJava")
             pkg(closureOf<PackageConfig> {
                 repo = "maven"
-                name = "restdocs-api-spec"
+                name = "restdocs-api-spec-gradle-plugin"
                 userOrg = "epages"
             })
         }
