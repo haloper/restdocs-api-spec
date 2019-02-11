@@ -17,7 +17,7 @@ plugins {
     id("pl.allegro.tech.build.axion-release") version "1.9.2"
     jacoco
     `maven-publish`
-    id("org.jmailen.kotlinter") version "1.20.1" apply false
+//    id("org.jmailen.kotlinter") version "1.20.1" apply false
     id("com.github.kt3k.coveralls") version "2.8.2"
     id("com.jfrog.bintray") version "1.8.4" apply false
 }
@@ -56,7 +56,7 @@ allprojects {
         apply(plugin = "kotlin")
         apply(plugin = "jacoco")
         apply(plugin = "maven-publish")
-        apply(plugin = "org.jmailen.kotlinter")
+//        apply(plugin = "org.jmailen.kotlinter")
     }
 }
 
@@ -113,7 +113,7 @@ subprojects {
             setPublications("mavenJava")
             pkg(closureOf<PackageConfig> {
                 repo = "maven"
-                name = "restdocs-api-spec-gradle-plugin"
+                name = "restdocs-api-spec"
                 userOrg = "epages"
             })
         }

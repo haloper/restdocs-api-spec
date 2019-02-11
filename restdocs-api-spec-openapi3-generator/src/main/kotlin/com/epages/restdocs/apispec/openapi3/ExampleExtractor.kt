@@ -5,16 +5,13 @@ package com.epages.restdocs.apispec.openapi3
  */
 object ExampleExtractor {
 
-    val delimiter = "\\^\\|"
+  val delimiter = "\\^\\|"
 
-    val expressions = arrayOf(
-        "($delimiter)([^($delimiter)]*)".toRegex(),
-        "\\(ex:(.*)\\)".toRegex())
+  val expression = "($delimiter)([^($delimiter)]*)$".toRegex()
+  fun extract(description: String) = (expression.findAll(
+      description).lastOrNull()?.groupValues?.lastOrNull() ?: "").trim()
 
-    fun extract(description: String): String {
-
-        return expressions.mapNotNull {
-            it.findAll(description).lastOrNull()?.groupValues?.lastOrNull()
-        }.firstOrNull()?.trim() ?: ""
-    }
+  fun remove(description: String): String {
+    return expression.replace(description, "")
+  }
 }
