@@ -528,30 +528,33 @@ class OpenApi3GeneratorTest {
         securityRequirements = null,
         requestFields = listOf(
             FieldDescriptor(
-                path = "[].op",
-                description = "operation",
+                path = "sub[].op",
+                description = "operation^|fwfwf",
                 type = "STRING"
             ),
             FieldDescriptor(
-                path = "[].path",
-                description = "path",
+                path = "sub[].path",
+                description = "path^|asdffe",
                 type = "STRING"
             ),
             FieldDescriptor(
-                path = "[].value",
-                description = "the new value",
+                path = "sub[].value",
+                description = "the new value^|asdfd",
                 type = "STRING"
             )
         ),
         contentType = "application/json-patch+json",
         example = """
-                [
-                    {
-                        "op": "add",
-                        "path": "/description",
-                        "value": "updated
-                    }
-                ]
+                {
+                  "sub":
+                    [
+                        {
+                            "op": "add",
+                            "path": "/description",
+                            "value": "updated"
+                        }
+                    ]
+                }
             """.trimIndent()
     )
   }

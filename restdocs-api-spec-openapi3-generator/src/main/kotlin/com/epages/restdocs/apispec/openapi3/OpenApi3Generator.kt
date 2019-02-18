@@ -102,18 +102,28 @@ object OpenApi3Generator {
       }.toMap()
     }
 
-    this.components.schemas.forEach { schema ->
-      schema.value?.properties?.forEach {
-        applyExampleToSchemas(it.value)
+    this.components.schemas.forEach { kv ->
+      kv.value?.let { schema ->
+        applyExampleToSchemas(schema)
       }
-
     }
   }
 
-  private fun applyExampleToSchemas(schema: Schema<Any>) {
-    schema.properties?.let { property -> property.forEach { applyExampleToSchemas(it.value) } }
-    schema.example = ExampleExtractor.extract(schema.description)
-    schema.description = ExampleExtractor.remove(schema.description)
+  private fun applyExampleToSchemas(schema: Schema<Any>, deep: Int = 0) {
+    if (deep >= 10) {
+      return
+    }
+    if (schema is ArraySchema) {
+      schema.items.properties.forEach { item ->
+        applyExampleToSchemas(item.value, deep + 1)
+      }
+    } else {
+      schema.properties?.forEach { item ->
+        applyExampleToSchemas(item.value, deep + 1)
+      }
+    }
+    schema.example = ExampleExtractor.extract(schema.description ?: "")
+    schema.description = ExampleExtractor.remove(schema.description ?: "")
   }
 
   private fun List<MediaType>.extractSchemas(
@@ -345,7 +355,8 @@ object OpenApi3Generator {
         .let { Json.mapper().readValue<Schema<Any>>(it) }
     return contentType to MediaType()
         .schema(schema)
-        .examples(examplesWithOperationId.map { it.key to Example().apply { value(it.value) } }.toMap().nullIfEmpty())
+        .examples(
+            examplesWithOperationId.map { it.key to Example().apply { value(it.value) } }.toMap().nullIfEmpty())
   }
 
   private fun extractPathParameters(resourceModel: ResourceModel): List<PathParameter> {
