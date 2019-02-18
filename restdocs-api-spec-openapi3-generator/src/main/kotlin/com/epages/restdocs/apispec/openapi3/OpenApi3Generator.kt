@@ -112,8 +112,8 @@ object OpenApi3Generator {
 
   private fun applyExampleToSchemas(schema: Schema<Any>) {
     schema.properties?.let { property -> property.forEach { applyExampleToSchemas(it.value) } }
-    schema.example = ExampleExtractor.extract(schema.description ?: "")
-    schema.description = ExampleExtractor.remove(schema.description ?: "")
+    schema.example = ExampleExtractor.extract(schema.description)
+    schema.description = ExampleExtractor.remove(schema.description)
   }
 
   private fun List<MediaType>.extractSchemas(

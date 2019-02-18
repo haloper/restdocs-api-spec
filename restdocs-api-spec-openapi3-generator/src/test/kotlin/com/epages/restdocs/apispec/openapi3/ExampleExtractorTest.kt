@@ -15,8 +15,8 @@ class ExampleExtractorTest {
     then(ExampleExtractor.extract("fddsf|한글$delimiterStr sfwwd$delimiterStr asw")).isEqualTo("asw")
     then(ExampleExtractor.extract("input you||^^r email ^$delimiterStr jinhoon.kim@nhnent.com")).isEqualTo(
         "jinhoon.kim@nhnent.com")
-    then(ExampleExtractor.extract("")).isEqualTo("")
-    then(ExampleExtractor.extract("asdfwfwf1 #@231 #@F#@FFSAD5 asdf")).isEqualTo("")
+    then(ExampleExtractor.extract("")).isNull()
+    then(ExampleExtractor.extract("asdfwfwf1 #@231 #@F#@FFSAD5 asdf")).isNull()
   }
 
   @Test
