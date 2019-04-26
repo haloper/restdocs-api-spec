@@ -149,7 +149,7 @@ object OpenApi20Generator {
             ?.firstOrNull()
     }
 
-    private fun extractOrFindSchema(schemasToKeys: HashMap<Model, String>, schema: Model, schemaNameGenerator: (Model) -> String): Model {
+    internal fun extractOrFindSchema(schemasToKeys: MutableMap<Model, String>, schema: Model, schemaNameGenerator: (Model) -> String): Model {
         val schemaKey = if (schemasToKeys.containsKey(schema)) {
             schemasToKeys[schema]!!
         } else {
@@ -160,7 +160,7 @@ object OpenApi20Generator {
         return RefModel("#/definitions/$schemaKey")
     }
 
-    private fun generateSchemaName(path: String): (Model) -> String {
+    internal fun generateSchemaName(path: String): (Model) -> String {
         return { schema -> path
             .replaceFirst("/", "")
             .replace("/", "_")
@@ -199,8 +199,8 @@ object OpenApi20Generator {
 
     private fun responsesByStatusCode(resources: List<ResourceModel>): Map<String, ResponseModel> {
         return resources.groupBy { it.response.status }
-                .mapKeys { it.key.toString() }
-                .mapValues { it.value[0].response }
+            .mapKeys { it.key.toString() }
+            .mapValues { it.value[0].response }
     }
 
     private fun resourceModels2Path(
@@ -273,34 +273,34 @@ object OpenApi20Generator {
             consumes = modelsWithSamePathAndMethod.map { it.request.contentType }.distinct().filterNotNull().nullIfEmpty()
             produces = modelsWithSamePathAndMethod.map { it.response.contentType }.distinct().filterNotNull().nullIfEmpty()
             parameters =
-                    extractPathParameters(
-                        firstModelForPathAndMethod
-                    ).plus(
-                        modelsWithSamePathAndMethod
-                                .flatMap { it.request.requestParameters }
-                                .distinctBy { it.name }
-                                .map { requestParameterDescriptor2Parameter(it)
-                                }).plus(
-                        modelsWithSamePathAndMethod
-                                .flatMap { it.request.headers }
-                                .distinctBy { it.name }
-                                .map { header2Parameter(it)
-                            }
-                    ).plus(
-                        listOfNotNull<Parameter>(
-                            requestFieldDescriptor2Parameter(
-                                modelsWithSamePathAndMethod.flatMap { it.request.requestFields },
-                                modelsWithSamePathAndMethod
-                                    .filter { it.request.contentType != null && it.request.example != null }
-                                    .map { it.request.contentType!! to it.request.example!! }
-                                    .toMap())
-                        )
-                    ).nullIfEmpty()
+                extractPathParameters(
+                    firstModelForPathAndMethod
+                ).plus(
+                    modelsWithSamePathAndMethod
+                        .flatMap { it.request.requestParameters }
+                        .distinctBy { it.name }
+                        .map { requestParameterDescriptor2Parameter(it)
+                        }).plus(
+                    modelsWithSamePathAndMethod
+                        .flatMap { it.request.headers }
+                        .distinctBy { it.name }
+                        .map { header2Parameter(it)
+                        }
+                ).plus(
+                    listOfNotNull<Parameter>(
+                        requestFieldDescriptor2Parameter(
+                            modelsWithSamePathAndMethod.flatMap { it.request.requestFields },
+                            modelsWithSamePathAndMethod
+                                .filter { it.request.contentType != null && it.request.example != null }
+                                .map { it.request.contentType!! to it.request.example!! }
+                                .toMap())
+                    )
+                ).nullIfEmpty()
             responses = responsesByStatusCode(
                 modelsWithSamePathAndMethod
             )
-                    .mapValues { responseModel2Response(it.value) }
-                    .nullIfEmpty()
+                .mapValues { responseModel2Response(it.value) }
+                .nullIfEmpty()
         }.apply {
             val securityRequirements = firstModelForPathAndMethod.request.securityRequirements
             if (securityRequirements != null) {
